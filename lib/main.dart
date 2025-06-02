@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
@@ -30,8 +31,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   String? _error;
 
-  void _login() {
-    if (_passwordController.text == '1234') {
+  Future<void> _login() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Если пароль ещё не был сохранён, по умолчанию он "1234"
+    String storedPassword = prefs.getString('password') ?? '1234';
+
+    if (_passwordController.text == storedPassword) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -234,7 +239,7 @@ class _PassportReaderScreenState extends State<PassportReaderScreen> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 35),
           child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if (_image != null) Image.file(_image!, height: 200),
@@ -314,10 +319,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final _newPasswordController = TextEditingController();
   String? _message;
 
-  void _changePassword() {
+  Future<void> _changePassword() async {
     if (_newPasswordController.text.isEmpty) {
       setState(() => _message = 'Пароль не может быть пустым.');
     } else {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('password', _newPasswordController.text);
       setState(() => _message = 'Пароль успешно изменён!');
     }
   }

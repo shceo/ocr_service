@@ -16,7 +16,7 @@ OCR_URL    = 'https://api.ocr.space/parse/image'
 # === Настройка клиента OpenRouter.ai ===
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key="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",
+    api_key="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",
 )
 MODEL = "meta-llama/llama-3.3-70b-instruct"
 
