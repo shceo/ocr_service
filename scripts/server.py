@@ -6,7 +6,9 @@ import re
 import json
 import tempfile
 from flask import Flask, request, send_file, jsonify
-from passport_to_excel_with_openrouter import (
+
+# Импортируем функции из passport_to_excel_with_openai.py
+from passport_to_excel import (
     ocr_parse_image,
     parse_mrz_manual,
     extract_cyrillic_name,
@@ -20,13 +22,13 @@ app = Flask(__name__)
 
 @app.route('/process', methods=['POST'])
 def process_passport():
-    # приходят form-data: file (image), filename (desired .xlsx name)
+    # Приходят form-data: file (image), filename (desired .xlsx name)
     img = request.files.get('file')
     out_name = request.form.get('filename', 'out.xlsx')
     if not img:
         return jsonify({'error': 'file is required'}), 400
 
-    # сохраним во временный файл
+    # Сохраним во временный файл
     tmp_img = tempfile.NamedTemporaryFile(suffix=os.path.splitext(img.filename)[1], delete=False)
     img.save(tmp_img.name)
 
@@ -57,7 +59,7 @@ def process_passport():
     # 3) GPT-коррекция
     final = gpt_cleanup(raw, combined)
 
-    # 4) Экспортим во временный Excel
+    # 4) Экспорт во временный Excel
     tmp_xlsx = tempfile.NamedTemporaryFile(suffix='.xlsx', delete=False)
     export_to_excel(final, tmp_xlsx.name)
 
