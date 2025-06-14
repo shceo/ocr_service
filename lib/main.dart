@@ -168,7 +168,7 @@ class _PassportReaderScreenState extends State<PassportReaderScreen> {
 
     try {
       // отправляем на сервер с указанием имени
-      final uri = Uri.parse('http://127.0.0.1:5000/process');
+      final uri = Uri.parse('https://ocr-service-oj4v.onrender.com/process');
       final request = http.MultipartRequest('POST', uri)
         ..files.add(await http.MultipartFile.fromPath('file', _image!.path))
         ..fields['filename'] = fileName;
