@@ -165,7 +165,6 @@ class _PassportReaderScreenState extends State<PassportReaderScreen> {
       _isProcessing = true;
       _error = null;
     });
-
     try {
       // отправляем на сервер с указанием имени
       final uri = Uri.parse('https://ocr-service-oj4v.onrender.com/process');
